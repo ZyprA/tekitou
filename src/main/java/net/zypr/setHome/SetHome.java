@@ -58,7 +58,6 @@ public final class SetHome extends JavaPlugin {
         HashMap<UUID, Location> locationHashMap = homeMapManager.getLocationHashMap();
         FileConfiguration config = YamlConfiguration.loadConfiguration(new File("locationData.yml"));
 
-        ConfigurationSection section = config.getConfigurationSection("player-locations");
         for (Map.Entry<UUID, Location> entry : homeMapManager.getLocationHashMap().entrySet()) {
             UUID uuid = entry.getKey();
             Location location = entry.getValue();
