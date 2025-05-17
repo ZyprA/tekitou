@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public final class SetHome extends JavaPlugin {
         this.homeMapManager = new HomeMap();
 
         loadMapConfig();
+        saveResource("locationData.yml", false);
 
         getCommand("sthome").setExecutor(new Commands());
         getCommand("home").setExecutor(new Commands());
@@ -40,7 +42,8 @@ public final class SetHome extends JavaPlugin {
     }
 
     private void loadMapConfig() {
-        FileConfiguration config = YamlConfiguration.loadConfiguration(new File("locationData.yml"));
+        File file = new File(getDataFolder(), "locationData.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
         ConfigurationSection section = config.getConfigurationSection("player-locations");
         if (section == null) return;
@@ -62,14 +65,21 @@ public final class SetHome extends JavaPlugin {
     private void saveMapConfig() {
         HashMap<UUID, Location> locationHashMap = homeMapManager.getLocationHashMap();
         if (locationHashMap == null) return;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(new File("locationData.yml"));
+        File file = new File(getDataFolder(), "locationData.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
         for (Map.Entry<UUID, Location> entry : locationHashMap.entrySet()) {
             UUID uuid = entry.getKey();
             Location location = entry.getValue();
             String path = "player-locations." + uuid.toString();
 
-            config.set(path + uuid, location);
+            config.set(path, location);
+        }
+
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
     public static SetHome getInstance() {
