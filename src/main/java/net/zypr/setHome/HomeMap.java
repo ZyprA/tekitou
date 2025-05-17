@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class HomeMap {
-    private HashMap<UUID, Location> locationHashMap;
+    private HashMap<UUID, Location> locationHashMap = new HashMap<>();
 
     public void addPlayerLocation(UUID uuid, Location location) {
         locationHashMap.put(uuid, location);

@@ -14,9 +14,11 @@ import java.util.UUID;
 
 public final class SetHome extends JavaPlugin {
     private HomeMap homeMapManager;
+    private static SetHome instance;
 
     @Override
     public void onEnable() {
+        instance = this;
         // Plugin startup logic
 
         saveDefaultConfig();
@@ -24,6 +26,9 @@ public final class SetHome extends JavaPlugin {
         this.homeMapManager = new HomeMap();
 
         loadMapConfig();
+
+        getCommand("sthome").setExecutor(new Commands());
+        getCommand("home").setExecutor(new Commands());
 
 
     }
@@ -56,14 +61,21 @@ public final class SetHome extends JavaPlugin {
 
     private void saveMapConfig() {
         HashMap<UUID, Location> locationHashMap = homeMapManager.getLocationHashMap();
+        if (locationHashMap == null) return;
         FileConfiguration config = YamlConfiguration.loadConfiguration(new File("locationData.yml"));
 
-        for (Map.Entry<UUID, Location> entry : homeMapManager.getLocationHashMap().entrySet()) {
+        for (Map.Entry<UUID, Location> entry : locationHashMap.entrySet()) {
             UUID uuid = entry.getKey();
             Location location = entry.getValue();
             String path = "player-locations." + uuid.toString();
 
             config.set(path + uuid, location);
         }
+    }
+    public static SetHome getInstance() {
+        return instance;
+    }
+    public HomeMap getHomeMapManager() {
+        return this.homeMapManager;
     }
 }
