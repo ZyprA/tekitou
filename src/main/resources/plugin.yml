@@ -1,0 +1,6 @@
+name: SetHome
+version: '1.0-SNAPSHOT'
+main: net.zypr.setHome.SetHome
+api-version: '1.21'
+authors: [ ZyprA ]
+description: ImgTrail is a plugin that player can portray of their own trail.
